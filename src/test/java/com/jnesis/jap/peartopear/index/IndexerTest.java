@@ -4,7 +4,9 @@ import org.junit.Test;
 
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 
 public class IndexerTest {
 
@@ -13,7 +15,7 @@ public class IndexerTest {
         Index i = new Index();
         Indexer.index("C:\\temp",i);
         //Adjust depending on your context
-        assertEquals("Index should contain 4 entries",4,i.size());
+        assertThat(i.size(), is(4));
     }
 
     @Test
@@ -28,8 +30,8 @@ public class IndexerTest {
         });
         //Adjust depending on your context
         c.stream().forEach(e -> System.out.println(e));
-        assertTrue(c.stream().anyMatch(entry -> entry.name.equals("movies.csv")));
-        assertTrue(c.stream().anyMatch(entry -> entry.name.equals("movies2.csv")));
+        assertThat(c.stream().anyMatch(entry -> entry.name.equals("movies.csv")), is(true));
+        assertThat(c.stream().anyMatch(entry -> entry.name.equals("movies2.csv")), is(true));
     }
 
 }

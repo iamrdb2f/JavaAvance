@@ -1,11 +1,12 @@
 package com.jnesis.jap.peartopear.index;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 
 public class IndexTest {
 
@@ -14,7 +15,7 @@ public class IndexTest {
         File f=new File("/inexisting_file.txt");
         Index i = new Index();
         i.addToIndex(f);
-        assertEquals("Index shouldn't contain this entry",0,i.size());
+        assertThat(i.size(), is(0));
     }
 
     @Test
@@ -22,6 +23,6 @@ public class IndexTest {
         File f=new File("C:\\temp\\movies.csv");
         Index i = new Index();
         i.addToIndex(f);
-        assertEquals("Index doesn't contain added entry",1,i.size());
+        assertThat(i.size(), is(1));
     }
 }
