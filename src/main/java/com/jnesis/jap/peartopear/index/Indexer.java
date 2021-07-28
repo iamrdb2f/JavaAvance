@@ -5,12 +5,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
+@AutoIndexer(path={"C:","temp"},scope = Scope.ONE)
 public class Indexer {
 
     private static final Logger LOG = LoggerFactory.getLogger(Indexer.class);
 
     public static void index(String path, Index index, Scope scope) {
         LOG.info("Indexing in "+scope.name()+" mode");
+
         if (path == null || path.length() == 0 || index == null) {
             LOG.debug("Skipping {}", path);
             return;
