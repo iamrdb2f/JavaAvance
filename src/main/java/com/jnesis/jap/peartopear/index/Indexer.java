@@ -9,7 +9,8 @@ public class Indexer {
 
     private static final Logger LOG = LoggerFactory.getLogger(Indexer.class);
 
-    public static void index(String path, Index index) {
+    public static void index(String path, Index index, Scope scope) {
+        LOG.info("Indexing in "+scope.name()+" mode");
         if (path == null || path.length() == 0 || index == null) {
             LOG.debug("Skipping {}", path);
             return;
@@ -20,9 +21,25 @@ public class Indexer {
             LOG.debug("Indexing {}", path);
             File[] childs = f.listFiles();
             for (int i = 0; i < childs.length; i++) {
-                index.addToIndex(childs[i]);
+                if (childs[i].isDirectory()){
+                    switch (scope){
+                        case ONE:
+                            index(childs[i].getPath(), index, Scope.BASE);
+                            break;
+                        case SUBTREE:
+                            index(childs[i].getPath(), index, Scope.SUBTREE);
+                            break;
+                    }
+                }
+                else {
+                    index.addToIndex(childs[i]);
+                }
             }
         }
+    }
+
+    public static void indexDirectory(){
+
     }
 
 }

@@ -11,9 +11,25 @@ import static org.hamcrest.Matchers.*;
 public class IndexerTest {
 
     @Test
-    public void testIndex(){
+    public void testIndexBASE(){
         Index i = new Index();
-        Indexer.index("C:\\temp",i);
+        Indexer.index("C:\\temp",i, Scope.BASE);
+        //Adjust depending on your context
+        assertThat(i.size(), is(2));
+    }
+
+    @Test
+    public void testIndexONE(){
+        Index i = new Index();
+        Indexer.index("C:\\temp",i, Scope.ONE);
+        //Adjust depending on your context
+        assertThat(i.size(), is(3));
+    }
+
+    @Test
+    public void testIndexSUTREE(){
+        Index i = new Index();
+        Indexer.index("C:\\temp",i, Scope.SUBTREE);
         //Adjust depending on your context
         assertThat(i.size(), is(4));
     }
@@ -21,7 +37,7 @@ public class IndexerTest {
     @Test
     public void testCriteria(){
         Index i = new Index();
-        Indexer.index("C:\\temp",i);
+        Indexer.index("C:\\temp",i,Scope.ONE);
         Collection<Index.IndexEntry> c=i.find(new Criteria(){
             @Override
             public boolean matches(String filename) {
