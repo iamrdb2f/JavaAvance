@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class Index {
 
@@ -25,6 +27,14 @@ public class Index {
 
     public int size(){
         return indexMap.size();
+    }
+
+    /**
+     * @param c a search criteria
+     * @return the index entries matching the given criteria
+     */
+    public Collection<IndexEntry> find(Criteria c){
+        return indexMap.values().stream().filter(v -> c.matches(v.name)).collect(Collectors.toList());
     }
 
     static class IndexEntry {
