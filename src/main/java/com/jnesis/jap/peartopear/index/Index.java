@@ -1,11 +1,14 @@
 package com.jnesis.jap.peartopear.index;
 
+import com.jnesis.jap.peartopear.utils.PathUtils;
+import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Index {
@@ -13,6 +16,7 @@ public class Index {
     private static final Logger LOG = LoggerFactory.getLogger(Index.class);
 
     private HashMap<String,IndexEntry> indexMap=new HashMap<>();
+
 
     public void addToIndex(File f){
         LOG.info("Adding file "+f.getName());
@@ -36,6 +40,27 @@ public class Index {
     public Collection<IndexEntry> find(Criteria c){
         return indexMap.values().stream().filter(v -> c.matches(v.name)).collect(Collectors.toList());
     }
+
+    public void autoFill(){
+        Reflections reflections = new Reflections("com.jnesis.jap.peartopear.index");
+        Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(AutoIndexer.class);
+        for (Class<?> clazz : annotated) {
+            try {
+                Method m = clazz.getDeclaredMethod("index", new Class[]{String.class, Index.class, Scope.class});
+                AutoIndexer a=clazz.getAnnotation(AutoIndexer.class);
+                m.invoke(clazz,PathUtils.combine(a.path()),this,a.scope());
+            } catch (NoSuchMethodException e) {
+                LOG.error(e.getMessage());
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
 
     static class IndexEntry {
         String path;

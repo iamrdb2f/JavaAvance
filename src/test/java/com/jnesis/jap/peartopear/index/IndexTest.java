@@ -25,4 +25,13 @@ public class IndexTest {
         i.addToIndex(f);
         assertThat(i.size(), is(1));
     }
+
+    @Test
+    public void testAutofill(){
+        Index i = new Index();
+        i.autoFill();
+        //Adjust depending on your context
+        assertThat(i.size(), is(3));
+    }
+
 }
