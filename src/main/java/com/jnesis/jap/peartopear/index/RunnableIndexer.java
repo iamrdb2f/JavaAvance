@@ -26,7 +26,7 @@ public class RunnableIndexer implements Runnable{
 
     @Override
     public void run() {
-        registerThread(Thread.currentThread());
+        
         index(path, index, scope);
         displayThreadsState();
     }
@@ -48,11 +48,15 @@ public class RunnableIndexer implements Runnable{
                     switch (scope){
                         case ONE:
                             final RunnableIndexer riOne=new RunnableIndexer(childs[i].getPath(),index,Scope.BASE);
-                            new Thread(riOne).start();
+                            Thread thOne=new Thread(riOne);
+                            thOne.start();
+                            registerThread(thOne);
                             break;
                         case SUBTREE:
                             final RunnableIndexer riTree=new RunnableIndexer(childs[i].getPath(),index,Scope.SUBTREE);
-                            new Thread(riTree).start();
+                            Thread thTree=new Thread(riTree);
+                            thTree.start();
+                            registerThread(thTree);
                             break;
                     }
                 }
