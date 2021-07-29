@@ -1,6 +1,11 @@
 package com.jnesis.jap.peartopear.utils;
 
+import com.jnesis.jap.peartopear.index.Index;
+import com.jnesis.jap.peartopear.index.Indexer;
+import com.jnesis.jap.peartopear.index.Scope;
 import org.junit.Test;
+
+import java.io.File;
 
 public class BenchmarkTest {
 
@@ -20,6 +25,16 @@ public class BenchmarkTest {
 
         System.out.println(b);
 
+    }
+
+    @Test
+    public void testTime(){
+        Benchmark b=new Benchmark();
+        b.start();
+        Index i=new Index();
+        Indexer.index("C:\\apache-maven-3.6.3",i, Scope.SUBTREE);
+        b.stop();
+        System.out.println(b);
     }
 
 }

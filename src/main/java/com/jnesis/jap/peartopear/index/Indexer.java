@@ -39,9 +39,4 @@ public class Indexer {
             }
         }
     }
-
-    public static void indexDirectory(){
-
-    }
-
 }
