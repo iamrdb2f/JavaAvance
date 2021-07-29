@@ -14,6 +14,8 @@ public class RunnableIndexer implements Runnable{
     private final Index index;
     private final Scope scope;
 
+    private List<Thread> threads=new ArrayList<>();
+
     private static final Logger LOG = LoggerFactory.getLogger(RunnableIndexer.class);
 
     public RunnableIndexer (String path, Index index, Scope scope) {
@@ -24,13 +26,13 @@ public class RunnableIndexer implements Runnable{
 
     @Override
     public void run() {
-        index.registerThread(Thread.currentThread());
+        registerThread(Thread.currentThread());
         index(path, index, scope);
+        displayThreadsState();
     }
 
     public void index(String path, Index index, Scope scope) {
         LOG.info("Indexing "+path+" in "+scope.name()+" mode");
-        index.displayThreadsState();
 
         if (path == null || path.length() == 0 || index == null) {
             LOG.debug("Skipping {}", path);
@@ -59,6 +61,21 @@ public class RunnableIndexer implements Runnable{
                     //index.addToIndex(childs[i]);
                 }
             }
+        }
+    }
+
+    public void registerThread(Thread th){
+        threads.add(th);
+    }
+
+    public void displayThreadsState(){
+        /* Ne pas utiliser d'iterator ou de forEach vous optiendrez une concurrentModificationException (voir plus loin).
+        Sauf a copier la liste au prealable comme ci dessous
+        List<Thread> copy = new ArrayList<>(threads);
+        copy.forEach(th-> System.out.println(th.getName()+" "+th.getState()));*/
+        for (int i=0;i<threads.size();i++){
+            final Thread th=threads.get(i);
+            System.out.println(th.getName()+" "+th.getState());
         }
     }
 }
