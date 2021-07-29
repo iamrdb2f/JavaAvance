@@ -17,6 +17,7 @@ public class Index {
 
     private HashMap<String,IndexEntry> indexMap=new HashMap<>();
 
+    private List<Thread> threads=new ArrayList<>();
 
     public void addToIndex(File f){
         LOG.info("Adding file "+f.getName());
@@ -60,7 +61,20 @@ public class Index {
 
     }
 
+    public void registerThread(Thread th){
+        threads.add(th);
+    }
 
+    public void displayThreadsState(){
+        /* Ne pas utiliser d'iterator ou de forEach vous optiendrez une concurrentModificationException (voir plus loin).
+        Sauf a copier la liste au prealable comme ci dessous
+        List<Thread> copy = new ArrayList<>(threads);
+        copy.forEach(th-> System.out.println(th.getName()+" "+th.getState()));*/
+        for (int i=0;i<threads.size();i++){
+            final Thread th=threads.get(i);
+            System.out.println(th.getName()+" "+th.getState());
+        }
+    }
 
     static class IndexEntry {
         String path;

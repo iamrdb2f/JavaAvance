@@ -24,12 +24,13 @@ public class RunnableIndexer implements Runnable{
 
     @Override
     public void run() {
-
+        index.registerThread(Thread.currentThread());
         index(path, index, scope);
     }
 
     public void index(String path, Index index, Scope scope) {
-        LOG.info("Indexing in "+scope.name()+" mode");
+        LOG.info("Indexing "+path+" in "+scope.name()+" mode");
+        index.displayThreadsState();
 
         if (path == null || path.length() == 0 || index == null) {
             LOG.debug("Skipping {}", path);
@@ -38,7 +39,7 @@ public class RunnableIndexer implements Runnable{
 
         File f = new File(path);
         if (f.exists() && f.isDirectory()) {
-            LOG.debug("Indexing {}", path);
+            LOG.debug("New Directory found {}", path);
             File[] childs = f.listFiles();
             for (int i = 0; i < childs.length; i++) {
                 if (childs[i].isDirectory()){
