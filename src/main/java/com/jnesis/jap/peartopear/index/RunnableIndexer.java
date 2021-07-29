@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @AutoIndexer(path={"C:","temp"},scope = Scope.ONE)
 public class RunnableIndexer implements Runnable{
@@ -26,7 +27,6 @@ public class RunnableIndexer implements Runnable{
 
     @Override
     public void run() {
-        registerThread(Thread.currentThread());
         index(path, index, scope);
         displayThreadsState();
     }
@@ -45,15 +45,26 @@ public class RunnableIndexer implements Runnable{
             File[] childs = f.listFiles();
             for (int i = 0; i < childs.length; i++) {
                 if (childs[i].isDirectory()){
+                    Optional<Scope> nextScope= Optional.empty();
                     switch (scope){
                         case ONE:
-                            final RunnableIndexer riOne=new RunnableIndexer(childs[i].getPath(),index,Scope.BASE);
-                            new Thread(riOne).start();
+                            nextScope=Optional.of(Scope.BASE);
                             break;
                         case SUBTREE:
-                            final RunnableIndexer riTree=new RunnableIndexer(childs[i].getPath(),index,Scope.SUBTREE);
-                            new Thread(riTree).start();
+                            nextScope=Optional.of(Scope.SUBTREE);
                             break;
+                    }
+                    if (nextScope.isPresent()){
+                        final RunnableIndexer ri=new RunnableIndexer(childs[i].getPath(),index,nextScope.get());
+                        Thread th=new Thread(ri);
+                        registerThread(th);
+                        th.start();
+                        try {
+                            th.join();
+                        }
+                        catch (InterruptedException ie){
+                            ie.printStackTrace();
+                        }
                     }
                 }
                 else {
@@ -65,7 +76,9 @@ public class RunnableIndexer implements Runnable{
     }
 
     public void registerThread(Thread th){
+
         threads.add(th);
+
     }
 
     public void displayThreadsState(){
@@ -73,9 +86,11 @@ public class RunnableIndexer implements Runnable{
         Sauf a copier la liste au prealable comme ci dessous
         List<Thread> copy = new ArrayList<>(threads);
         copy.forEach(th-> System.out.println(th.getName()+" "+th.getState()));*/
+        System.out.println("--DISPLAY THREADS");
         for (int i=0;i<threads.size();i++){
             final Thread th=threads.get(i);
             System.out.println(th.getName()+" "+th.getState());
         }
+        System.out.println("--END DISPLAY THREADS");
     }
 }
