@@ -1,18 +1,21 @@
 package com.jnesis.jap.peartopear.connection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ConnectionCounter {
 
-    private int counter=0;
+    private static final Logger LOG = LoggerFactory.getLogger(ConnectionCounter.class);
+
+    private int counter;
 
     public void increment(){
         counter++;
+        LOG.debug("Incremented new Value is "+counter);
     }
 
     public void decrement(){
         counter--;
-    }
-
-    public int getCounter(){
-        return counter;
+        LOG.debug("Decremented new Value is "+counter);
     }
 }

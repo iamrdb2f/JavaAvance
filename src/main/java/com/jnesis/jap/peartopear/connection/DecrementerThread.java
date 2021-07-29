@@ -18,7 +18,6 @@ public class DecrementerThread extends Thread{
     public void run() {
         for (int i=0;i<1000;i++) {
             connectionCounter.decrement();
-            LOG.debug(""+connectionCounter.getCounter());
         }
     }
 }
