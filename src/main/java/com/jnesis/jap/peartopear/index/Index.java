@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Index {
@@ -18,6 +16,7 @@ public class Index {
     private static final Logger LOG = LoggerFactory.getLogger(Index.class);
 
     private HashMap<String,IndexEntry> indexMap=new HashMap<>();
+
 
     public void addToIndex(File f){
         LOG.info("Adding file "+f.getName());
@@ -60,6 +59,8 @@ public class Index {
         }
 
     }
+
+
 
     static class IndexEntry {
         String path;

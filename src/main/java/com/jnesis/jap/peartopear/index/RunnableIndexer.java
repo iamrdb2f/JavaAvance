@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @AutoIndexer(path={"C:","temp"},scope = Scope.ONE)
 public class RunnableIndexer implements Runnable{
@@ -22,11 +24,12 @@ public class RunnableIndexer implements Runnable{
 
     @Override
     public void run() {
+
         index(path, index, scope);
     }
 
     public void index(String path, Index index, Scope scope) {
-        LOG.info(Thread.currentThread().getName()+"Indexing in "+scope.name()+" mode");
+        LOG.info("Indexing in "+scope.name()+" mode");
 
         if (path == null || path.length() == 0 || index == null) {
             LOG.debug("Skipping {}", path);
