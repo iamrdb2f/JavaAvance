@@ -9,13 +9,15 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 public class Index {
 
     private static final Logger LOG = LoggerFactory.getLogger(Index.class);
 
-    private HashMap<String,IndexEntry> indexMap=new HashMap<>();
+    private ConcurrentHashMap<String,IndexEntry> indexMap=new ConcurrentHashMap<>();
 
     public void addToIndex(File f){
         LOG.info("Adding file "+f.getName());
@@ -23,9 +25,16 @@ public class Index {
             LOG.warn("File doesn't exist");
             return;
         }
-        final IndexEntry indexEntry=IndexEntry.createIndexEntry(f);
-        indexMap.put(f.getName(),indexEntry);
-        LOG.info("IndexEntry "+indexEntry+" has been added");
+        IndexEntry newEntry=indexMap.compute(f.getName(), new BiFunction<String, IndexEntry, IndexEntry>() {
+            @Override
+            public IndexEntry apply(String s, IndexEntry indexEntry) {
+                //Impossible que indexEntry existe deja etant donne que chaque thread s'applique a un rep dedie
+                return IndexEntry.createIndexEntry(f);
+            }
+        });
+
+        LOG.info("IndexEntry "+newEntry+" has been added");
+
     }
 
     public int size(){

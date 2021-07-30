@@ -68,8 +68,8 @@ public class RunnableIndexer implements Runnable{
                     }
                 }
                 else {
-                    System.out.println(childs[i].getName());
-                    //index.addToIndex(childs[i]);
+                    //System.out.println(childs[i].getName());
+                    index.addToIndex(childs[i]);
                 }
             }
         }
