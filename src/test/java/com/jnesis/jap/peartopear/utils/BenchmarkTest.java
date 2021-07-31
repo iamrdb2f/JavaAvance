@@ -2,11 +2,8 @@ package com.jnesis.jap.peartopear.utils;
 
 import com.jnesis.jap.peartopear.index.Index;
 import com.jnesis.jap.peartopear.index.Indexer;
-import com.jnesis.jap.peartopear.index.RunnableIndexer;
 import com.jnesis.jap.peartopear.index.Scope;
 import org.junit.Test;
-
-import java.io.File;
 
 public class BenchmarkTest {
 
